@@ -1,0 +1,2 @@
+{:lint-as {net.eighttrigrams.defn-over-http.core/defn-over-http clojure.core/def
+           net.eighttrigrams.defn-over-http.core/defdispatch    clojure.core/def}}

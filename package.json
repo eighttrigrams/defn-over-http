@@ -1,0 +1,32 @@
+{
+  "name": "fullstack-clj",
+  "version": "1.0.0",
+  "description": "Made from a `figwheel-main` starter, which provides a lot of stuff. First and foremost hot-code-reloading.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielmarreirosdeoliveira/fullstack-clj.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielmarreirosdeoliveira/fullstack-clj/issues"
+  },
+  "homepage": "https://github.com/danielmarreirosdeoliveira/fullstack-clj#readme",
+  "devDependencies": {
+    "webpack": "^5.30.0",
+    "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "tsfun": "5.5.7"
+  }
+}

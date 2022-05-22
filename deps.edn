@@ -1,0 +1,9 @@
+{:paths   ["src/lib/cljc"]
+ :aliases {
+           :jar    {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
+                    :exec-fn      hf.depstar/jar
+                    :exec-args    {}}
+           :deploy {:extra-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                    :exec-fn    deps-deploy.deps-deploy/deploy
+                    :exec-args  {:installer      :remote
+                                 :artifact       "DepsOverHttp.jar"}}}}
