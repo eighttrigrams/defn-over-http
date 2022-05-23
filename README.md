@@ -37,7 +37,6 @@ To declare it callable, all that is necessary is something like this:
 ```
 (ns fullstack.dispatch
  (:require 
-  cognitect.transit
   [net.eighttrigrams.defn-over-http.core :refer [defdispatch]]
   ;; Refer to the original function
   [fullstack.resources :refer [list-resources]])) 

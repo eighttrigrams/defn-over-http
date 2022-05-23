@@ -1,8 +1,7 @@
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (ns fullstack.api
   (:require-macros [net.eighttrigrams.defn-over-http.core :refer [defn-over-http]])
-  (:require ajax.core
-            cognitect.transit))
+  (:require ajax.core))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (def api-path "/api")
