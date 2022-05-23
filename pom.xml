@@ -41,6 +41,6 @@
     <url>https://github.com/eighttrigrams/defn-over-http</url>
     <connection>scm:git:git://github.com/eighttrigrams/defn-over-http.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/eighttrigrams/defn-over-http.git</developerConnection>
-    <tag>de03b88dc1aef563928076b367289b71e10388d4</tag>
+    <tag>4060c4fa5ceeb303621a191d51e23a015974951f</tag>
   </scm>
 </project>
