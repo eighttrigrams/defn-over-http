@@ -25,7 +25,7 @@ Note that an [example application](./README.md#example-application) is part of t
 
 Let `list-resources` be our function on the backend:
 
-```
+```clojure
 (ns fullstack.resources)
 (defn list-resources 
   [{}] ;; <- see section "# Server Arguments" below
@@ -34,7 +34,7 @@ Let `list-resources` be our function on the backend:
 
 To declare it callable, all that is necessary is something like this:
 
-```
+```clojure
 (ns fullstack.dispatch
  (:require 
   [net.eighttrigrams.defn-over-http.core :refer [defdispatch]]
@@ -48,9 +48,10 @@ To declare it callable, all that is necessary is something like this:
 To declare this same function on the frontend you'll have to set up something like
 this:
 
-```
+```clojure
 (ns fullstack.api
- (:require-macros [net.eighttrigrams.defn-over-http.core :refer [defn-over-http]]))
+ (:require-macros [net.eighttrigrams.defn-over-http.core :refer [defn-over-http]])
+ (:require ajax.core))
 
 (def api-path "/api")
 ;; See section "# Configuration"
@@ -66,7 +67,7 @@ this:
 
 Now you can call that function from anywhere in the frontend
 
-```
+```clojure
 (:require [fullstack.api :as api])
 (def list-resources (api/list-resources #(prn "result: " %)))
 (list-resources "")
@@ -81,7 +82,7 @@ From the example it should be clear that this method pays off pretty quickly if 
 
 This piece in [clj/fullstack/api.clj](./src/example/clj/fullstack//api.clj)
 
-```
+```clojure
 (defn wrap-auth [handle]
   (fn [req]
     (handle (assoc-in req [:body :server-args :permissions] 
@@ -98,7 +99,7 @@ of the api callable function (see [clj/fullstack/resources.clj](./src/example/cl
 An error handler passed as an argument at the call site can be used 
 instead of the `base-error-handler` provided at the declaration site.
 
-```
+```clojure
 (def list-resources (api/list-resources 
                      #(prn %) 
                      #(prn "err:" %)))
@@ -118,7 +119,7 @@ the default return value.
 Here is an explanation of the available configuration options
 at the declaration site:
 
-```
+```clojure
 (ns fullstack.api
  (:require [fullstack.utils :refer [defn-over-http]]))
 
