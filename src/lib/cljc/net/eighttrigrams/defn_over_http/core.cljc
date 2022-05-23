@@ -49,9 +49,13 @@
                                   :error-handler   (fn [~e1]
                                                      (if
                                                       (map? ~e1)
-                                                       (if (= 0 (:status ~e1))
-                                                         (~handle-error :backend-not-reachable "(env: prod) Backend not reachable")
-                                                         (~handle-error :http-error [(:status ~e1) (:status-text ~e1)]))
+                                                       (if (= (:failure ~e1) :parse)
+                                                         (~handle-error :malformed-json-body
+                                                                        (str "Expected json body but got: '" (:original-text ~e1)
+                                                                             "'. Problem description: '" (:status-text ~e1) "'"))
+                                                         (if (= 0 (:status ~e1))
+                                                           (~handle-error :backend-not-reachable "(env: prod) Backend not reachable")
+                                                           (~handle-error :http-error [(:status ~e1) (:status-text ~e1)])))
                                                        (~handle-error :unknown         ~e1)))
                                   :handler         (fn [{~return :return
                                                          ~thrown :thrown}]
