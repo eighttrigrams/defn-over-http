@@ -44,8 +44,8 @@
                                   :body            (.stringify
                                                     js/JSON
                                                     (cljs.core/clj->js
-                                                     {:function ~(str fname)
-                                                      :args     (cognitect.transit/write ~writer ~args)}))
+                                                     {:fn   ~(str fname)
+                                                      :args (cognitect.transit/write ~writer ~args)}))
                                   :error-handler   (fn [~e1]
                                                      (if
                                                       (map? ~e1)
@@ -77,7 +77,7 @@
     `(do
        (require 'cognitect.transit)
        (defn ~fname
-        [{{~function    :function
+        [{{~function    :fn
            ~args        :args
            ~server-args :server-args} :body}]
         (let [~os     (java.io.ByteArrayOutputStream. 4096)
