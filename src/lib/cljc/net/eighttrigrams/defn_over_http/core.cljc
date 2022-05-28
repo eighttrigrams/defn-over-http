@@ -2,10 +2,10 @@
 
 (defmacro defn-over-http
   ([fname]
-   `(defn-over-http ~fname nil))
-  ([fname base-error-handler]
-   `(defn-over-http ~fname ~base-error-handler ~(symbol 'fetch-base-headers)))
-  ([fname base-error-handler fetch-base-headers]
+   `(defn-over-http ~fname ['nil 'nil]))
+  ([fname [returnval base-error-handler]]
+   `(defn-over-http ~fname [~returnval ~base-error-handler] ~(symbol 'fetch-base-headers)))
+  ([fname [returnval base-error-handler] fetch-base-headers]
    (let [args          (gensym)
          handle-error  (gensym)
          request       (gensym)
@@ -26,10 +26,11 @@
              (let [~reader       (cognitect.transit/reader :json) ;; TODO close?
                    ~writer       (cognitect.transit/writer :json)
                    ~handle-error (fn [~e-type ~e]
-                                   ((if ~base-error-handler
-                                      ~base-error-handler
-                                      ~reject) {:reason ~e-type
-                                                :msg    ~e}))
+                                   (if ~base-error-handler
+                                     (do (~base-error-handler {:reason ~e-type :msg ~e})
+                                         (~resolve ~returnval))
+                                     (do
+                                       (~reject {:reason ~e-type :msg ~e}))))
                    ~request      {:response-format :json
                                   :keywords?       true
                                   :headers         (merge

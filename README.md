@@ -29,7 +29,7 @@ Let `list-resources` be our function on the backend:
 (ns fullstack.resources)
 (defn list-resources 
   [{}] ; <- see section "# Server Arguments" below
-  (fn [query-string] ...)
+  (fn [query-string] ...) ; returns a vector
 ```
 
 To declare it callable, all that is necessary is something like this:
@@ -65,7 +65,7 @@ this:
 ;; This line will "create" and make available 
 ;; on the frontend a function 
 ;; with the corresponding (!) name.
-(defn-over-http list-resources error-handler)
+(defn-over-http list-resources [[] error-handler])
 ```
 
 Now you can call that function from anywhere in the frontend
@@ -84,6 +84,17 @@ map gets transported over http via `transit-clj(s)`. The return value comes via 
 From the example it should be clear that this method pays off pretty quickly if you have multiple such functions. For each extra function one only would have to add one argument to `defdispatch` and then another `defn-over-http` line.
 
 ## Error handling
+
+When a error handler is present passed in as an argument at the declaration site,
+
+```clojure
+(defn-over-http list-resources [[] error-handler]])
+```
+
+it comes in conjunction with a default return value. Since the error gets handled 
+not at the call site, i.e. the promise there resolves, we have an opportunity to make
+sure it resolves with some suitable result value, optimally matching the usual type
+of the values the function on the backend returns.
 
 If no error handler is passed in as an argument at the declaration site,
 

@@ -11,4 +11,4 @@
 
 (def error-handler #(prn "error caught by base error handler:" %))
 
-(defn-over-http list-resources error-handler)
+(defn-over-http list-resources)
