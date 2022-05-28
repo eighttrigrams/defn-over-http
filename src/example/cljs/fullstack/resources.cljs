@@ -22,7 +22,8 @@
   (let [query-string   (atom "")
         result         (atom [])
         list-resources #(go 
-                          (try (->> (api/list-resources @query-string)
+                          (try (->> @query-string
+                                    api/list-resources
                                     <p!
                                     (reset! result))
                                (catch js/Error err (prn (.-cause err)))))

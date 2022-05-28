@@ -75,7 +75,7 @@ Now you can call that function from anywhere in the frontend
           [cljs.core.async :refer [go]]
           [cljs.core.async.interop :refer-macros [<p!]])
 
-(go (->> (api/list-resources "") <p! prn))
+(go (-> (api/list-resources "") <p! prn))
 ```
 
 and the corresponding function `list-resources` on the backend is called. The argument
@@ -94,7 +94,7 @@ If no error handler is passed in as an argument at the declaration site,
 errors must be caught at the call site.
 
 ```clojure
-(go (try (->> (api/list-resources "") <p! prn))
+(go (try (-> (api/list-resources "") <p! prn))
          (catch js/Error err (prn (.-cause err))))
 ```
 
