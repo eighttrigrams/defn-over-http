@@ -7,9 +7,8 @@
 (def api-path "/api")
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(def base-error-handler #(prn "error caught by base error handler:" %))
-
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn fetch-base-headers [] {})
 
-(defn-over-http list-resources [])
+(def error-handler #(prn "error caught by base error handler:" %))
+
+(defn-over-http list-resources error-handler)

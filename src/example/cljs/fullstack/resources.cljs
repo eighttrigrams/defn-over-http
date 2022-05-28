@@ -1,6 +1,8 @@
 (ns fullstack.resources
   (:require [reagent.core :as reagent :refer [atom]]
-            [fullstack.api :as api]))
+            [fullstack.api :as api]
+            [cljs.core.async :refer [go]]
+            [cljs.core.async.interop :refer-macros [<p!]]))
 
 (defn- search-component [q on-change]
   [:div.search
@@ -19,9 +21,11 @@
 (defn component []
   (let [query-string   (atom "")
         result         (atom [])
-        handler        #(reset! result %)
-        _error-handler #(prn "caught by error handler:" %)
-        list-resources #((api/list-resources handler #_error-handler) @query-string)
+        list-resources #(go 
+                          (try (->> (api/list-resources @query-string)
+                                    <p!
+                                    (reset! result))
+                               (catch js/Error err (prn (.-cause err)))))
         on-change      (fn [new-query-string]
                          (reset! query-string new-query-string)
                          (list-resources))]
