@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>net.eighttrigrams</groupId>
   <artifactId>defn-over-http</artifactId>
-  <version>0.1.10</version>
+  <version>0.1.11</version>
   <name>defn-over-http</name>
   <dependencies>
     <dependency>

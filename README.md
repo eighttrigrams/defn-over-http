@@ -6,7 +6,7 @@ are passed back and forth via the [transit-format](https://github.com/cognitect/
 
 ## Usage
 
-To fetch the dependency via Leiningen use `[net.eighttrigrams/defn-over-http "0.1.10"]`.
+To fetch the dependency via Leiningen use `[net.eighttrigrams/defn-over-http "0.1.11"]`.
 
 ## Rationale
 

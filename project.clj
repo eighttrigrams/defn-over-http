@@ -1,6 +1,6 @@
-(defproject fullstack "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+(defproject fullstack "0.1.11"
+  :description "Allows for Clojure backend functions to be called by ClojureScript frontend code"
+  :url "https://github.com/eighttrigrams/defn-over-http"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
