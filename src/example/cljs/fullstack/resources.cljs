@@ -23,7 +23,7 @@
         result         (atom [])
         list-resources #(go 
                           (try (->> @query-string
-                                    api/list-resources
+                                    api/list-resources ; also try using api/list-public-resources
                                     <p!
                                     (reset! result))
                                (catch js/Error err (prn (.-cause err)))))

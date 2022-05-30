@@ -6,10 +6,13 @@
    {:id 2 :name "two"}
    {:id 3 :name "three" :protected true}])
 
-(defn list-resources [{permissions :permissions}] 
+(defn list-resources [{permissions :permissions}]
   (fn [query-string]
     #_(throw (Exception. "oh no"))
     (->> resources
          (remove #(when (not= permissions "all")
                     (:protected %)))
          (remove #(not (str/starts-with? (:name %) query-string))))))
+
+(defn list-public-resources [query-string]
+  ((list-resources {:permissions "none"}) query-string))

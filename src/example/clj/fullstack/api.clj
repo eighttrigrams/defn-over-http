@@ -15,6 +15,7 @@
       (wrap-json-response)
       (wrap-json-body {:keywords? true})))
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (c/defroutes app
   (c/POST "/api" [] query-route)
   (route/resources "/"))

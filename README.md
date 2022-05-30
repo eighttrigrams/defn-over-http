@@ -23,13 +23,12 @@ exists and should be wired up? It then could approximate something like a regula
 
 Note that an [example application](./README.md#example-application) is part of this repository. 
 
-Let `list-resources` be our function on the backend:
+Let `list-public-resources` be our function on the backend:
 
 ```clojure
 (ns fullstack.resources)
-(defn list-resources 
-  [{}] ; <- see section "# Server Arguments" below
-  (fn [query-string] ...) ; returns a vector
+
+(defn list-public-resources [query-string] ...) ; returns a vector
 ```
 
 To declare it callable, all that is necessary is something like this:
@@ -39,10 +38,10 @@ To declare it callable, all that is necessary is something like this:
  (:require 
   [net.eighttrigrams.defn-over-http.core :refer [defdispatch]]
   ;; Refer to the original function
-  [fullstack.resources :refer [list-resources]])) 
+  [fullstack.resources :refer [list-public-resources]])) 
     
 ;; Declare the function as api callable
-(defdispatch handler list-resources)
+(defdispatch handler list-public-resources)
 ```
 
 To declare this same function on the frontend you'll have to set up something like
@@ -65,7 +64,7 @@ this:
 ;; This line will "create" and make available 
 ;; on the frontend a function 
 ;; with the corresponding (!) name.
-(defn-over-http list-resources [[] error-handler])
+(defn-over-http list-public-resources [[] error-handler])
 ```
 
 Now you can call that function from anywhere in the frontend
@@ -75,10 +74,10 @@ Now you can call that function from anywhere in the frontend
           [cljs.core.async :refer [go]]
           [cljs.core.async.interop :refer-macros [<p!]])
 
-(go (-> (api/list-resources "") <p! prn))
+(go (-> (api/list-public-resources "") <p! prn))
 ```
 
-and the corresponding function `list-resources` on the backend is called. The argument
+and the corresponding function `list-public-resources` on the backend is called. The argument
 map gets transported over http via `transit-clj(s)`. The return value comes via callback instead of as a return value, as per usual in a non-blocking js env.
 
 From the example it should be clear that this method pays off pretty quickly if you have multiple such functions. For each extra function one only would have to add one argument to `defdispatch` and then another `defn-over-http` line.
@@ -88,7 +87,7 @@ From the example it should be clear that this method pays off pretty quickly if 
 When a error handler is present passed in as an argument at the declaration site,
 
 ```clojure
-(defn-over-http list-resources [[] error-handler]])
+(defn-over-http list-public-resources [[] error-handler]])
 ```
 
 it comes in conjunction with a default return value. Since the error gets handled 
@@ -99,17 +98,32 @@ of the values the function on the backend returns.
 If no error handler is passed in as an argument at the declaration site,
 
 ```clojure
-(defn-over-http list-resources)
+(defn-over-http list-public-resources)
 ```
 
 errors must be caught at the call site.
 
 ```clojure
-(go (try (-> (api/list-resources "") <p! prn))
+(go (try (-> (api/list-public-resources "") <p! prn))
          (catch js/Error err (prn (.-cause err))))
 ```
 
 ## Server arguments
+
+In our example we used `(defdispatch handler list-public-resources)`. There exists a variant: 
+
+```clojure
+(defdispatch-with-args handler list-resources)
+```
+
+This one is used when with the following scenario in mind: Let's say we want to implement
+authentication. Then on the frontend we would implement `(defn fetch-base-headers [] <..>)` meaningfully. On the backend side, we would want our function to receive corresponding permissions
+in addition to the usual arguments coming from the frontend.
+
+```clojure
+(defn list-resources [{permissions :permissions}]
+  (fn [& args] .. <do something with the permissions and the arguments>))
+```
 
 This piece in [clj/fullstack/api.clj](./src/example/clj/fullstack//api.clj)
 
@@ -123,7 +137,7 @@ This piece in [clj/fullstack/api.clj](./src/example/clj/fullstack//api.clj)
 
 would take information from the request headers and convert them to server side permissions. 
 In fact anything wrapped into `[:body :server-args]` will get passed into the first parameter list
-of the api callable function (see [clj/fullstack/resources.clj](./src/example/clj/fullstack/resources.clj).
+of `list-resources` (see [clj/fullstack/resources.clj](./src/example/clj/fullstack/resources.clj) in case `defdispatch-with-args` is used.
 
 ## Example application
 

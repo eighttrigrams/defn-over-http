@@ -9,6 +9,10 @@
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn fetch-base-headers [] {})
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (def error-handler #(prn "error caught by base error handler:" %))
+
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(defn-over-http list-public-resources)
 
 (defn-over-http list-resources)

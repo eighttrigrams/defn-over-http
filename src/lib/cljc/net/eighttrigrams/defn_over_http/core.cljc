@@ -59,7 +59,7 @@
                                                        (~resolve (cognitect.transit/read ~reader ~return))))}]
                (ajax.core/POST ~(symbol 'api-path) ~request)))))))))
 
-(defmacro defdispatch [fname & names]
+(defmacro ^:private -defdispatch [fname pass-server-args & names]
   (let [function    (gensym)
         args        (gensym)
         server-args (gensym)
@@ -83,7 +83,9 @@
                              [(str name) `{:return (do
                                                      (cognitect.transit/write
                                                       ~writer
-                                                      (apply (~name ~server-args)
+                                                      (apply (if ~pass-server-args
+                                                               (~name ~server-args)
+                                                               ~name)
                                                              (cognitect.transit/read ~reader)))
                                                      (.toString ~os))
                                            :thrown nil}]) names)
@@ -94,3 +96,9 @@
                   :thrown (.toString ~e)})
                (finally (.close ~os)
                         (.close ~is))))))))
+
+(defmacro defdispatch [fname & args]
+  (apply (partial #'-defdispatch &form &env fname false) args))
+
+(defmacro defdispatch-with-args [fname & args]
+  (apply (partial #'-defdispatch &form &env fname true) args))
