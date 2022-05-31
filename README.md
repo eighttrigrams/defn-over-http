@@ -95,7 +95,7 @@ Note that keys and values can also be passed varargs-style
 ## Error handling
 
 When an `:error-handler` is present, it must come in conjuction with a definition
-for `:return-handler`. This is because in this case no error will be thrown at the call site. So the consumer of the succesful promise there should get an empty result matching the type of the values that our original function returns.
+for `:return-value`. This is because in this case no error will be thrown at the call site. So the consumer of the succesful promise there should get an empty result matching the type of the values that our original function returns.
 
 If however, no error handler is defined at the declaration site, errors must be caught at the call site.
 
