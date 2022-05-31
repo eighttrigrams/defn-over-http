@@ -2,11 +2,10 @@
 
 (defmacro defn-over-http
   ([fname]
-   `(defn-over-http ~fname ['nil 'nil]))
-  ([fname [return-value base-error-handler]]
-   `(defn-over-http ~fname [~return-value ~base-error-handler] ~(symbol 'fetch-base-headers)))
-  ([fname [return-value base-error-handler] fetch-base-headers]
-   (let [args          (gensym)
+   `(defn-over-http ~fname ~(symbol 'config)))
+  ([fname config-param]
+   (let [config        (gensym)
+         args          (gensym)
          handle-error  (gensym)
          request       (gensym)
          reader        (gensym)
@@ -23,18 +22,21 @@
         (defn ~fname [& ~args]
           (js/Promise.
            (fn [~resolve ~reject]
-             (let [~reader       (cognitect.transit/reader :json) ;; TODO close?
+             (let [~config       (merge ~(symbol 'config) ~config-param)
+                   ~reader       (cognitect.transit/reader :json) ;; TODO close?
                    ~writer       (cognitect.transit/writer :json)
                    ~handle-error (fn [~e-type ~e]
-                                   (if ~base-error-handler
-                                     (do (~base-error-handler {:reason ~e-type :msg ~e})
-                                         (~resolve ~return-value))
+                                   (if (:error-handler ~config)
+                                     (do ((:error-handler ~config) {:reason ~e-type :msg ~e})
+                                         (~resolve (:return-value ~config)))
                                      (do
                                        (~reject {:reason ~e-type :msg ~e}))))
                    ~request      {:response-format :json
                                   :keywords?       true
                                   :headers         (merge
-                                                    (~fetch-base-headers)
+                                                    (if (:fetch-base-headers ~config)
+                                                      ((:fetch-base-headers ~config))
+                                                      {})
                                                     {"Content-Type" "application/json"})
                                   :body            (.stringify
                                                     js/JSON
@@ -57,7 +59,7 @@
                                                      (if ~thrown
                                                        (~handle-error :exception ~thrown)
                                                        (~resolve (cognitect.transit/read ~reader ~return))))}]
-               (ajax.core/POST ~(symbol 'api-path) ~request)))))))))
+               (ajax.core/POST (:api-path ~config) ~request)))))))))
 
 (defmacro ^:private -defdispatch [fname pass-server-args & names]
   (let [function    (gensym)

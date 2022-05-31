@@ -49,53 +49,49 @@ this:
 
 ```clojure
 (ns fullstack.api
- (:require-macros [net.eighttrigrams.defn-over-http.core 
-                   :refer [defn-over-http]])
+ (:require-macros 
+  [net.eighttrigrams.defn-over-http.core 
+   :refer [defn-over-http]])
  (:require ajax.core))
 
-(def api-path "/api")
-;; Useful for authentication.
-;; Gets automatically used unless a function is 
-;; passed into defn-over-http as a second parameter
-(defn fetch-base-headers [] {}) 
-;; See section "# Error handling"
-(def error-handler #(prn %))    
+(def config {:api-path "/"
+             :error-handler #(prn %)})
 
-;; This line will "create" and make available 
-;; on the frontend a function 
-;; with the corresponding (!) name.
-(defn-over-http list-public-resources [[] error-handler])
+(defn-over-http list-public-resources {:return-value []})
 ```
+
+This will "create" and make available on the frontend a function
+with the corresponding (!) name. For the configuration maps see
+sections [Configuration](#configuration) and [Error handling](#error-handling).
 
 Now you can call that function from anywhere in the frontend
 
 ```clojure
-(:require [fullstack.api :as api]
-          [cljs.core.async :refer [go]]
-          [cljs.core.async.interop :refer-macros [<p!]])
+(:require 
+ [fullstack.api :as api]
+ [cljs.core.async :refer [go]]
+ [cljs.core.async.interop :refer-macros [<p!]])
 
 (go (-> (api/list-public-resources "") <p! prn))
 ```
 
-and the corresponding function `list-public-resources` on the backend is called. The argument
-map gets transported over http via `transit-clj(s)`. The return value comes via callback instead of as a return value, as per usual in a non-blocking js env.
+and the corresponding function `list-public-resources` on the backend is called. The argument map gets transported over http via `transit-clj(s)`. The return value comes as a promise, for we are in a non-blocking js environment.
 
 From the example it should be clear that this method pays off pretty quickly if you have multiple such functions. For each extra function one only would have to add one argument to `defdispatch` and then another `defn-over-http` line.
 
+## Configuration
+
+In the namespace where `defn-over-http` is used, a config map must be present.
+It can contain any of the keys `:api-path`, `:error-handler`, `:return-value`
+and `:fetch-base-headers`. In its arity-2 version `defn-over-http` takes an
+additional map, which gets merged into the config map.
+
 ## Error handling
 
-When a error handler is present passed in as an argument at the declaration site,
+When a `:error-handler` is present, it must come in conjuction with a definition
+for `:return-handler`. This is because in this case no error will be thrown at the call site. So the consumer of the succesful promise there should get an empty result matching the type of the values the our original function returns.
 
-```clojure
-(defn-over-http list-public-resources [[] error-handler]])
-```
-
-it comes in conjunction with a default return value. Since the error gets handled 
-not at the call site, i.e. the promise there resolves, we have an opportunity to make
-sure it resolves with some suitable result value, optimally matching the usual type
-of the values the function on the backend returns.
-
-If no error handler is passed in as an argument at the declaration site,
+If however, no error handler is defined at the declaration site,
 
 ```clojure
 (defn-over-http list-public-resources)
