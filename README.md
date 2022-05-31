@@ -86,6 +86,12 @@ It can contain any of the keys `:api-path`, `:error-handler`, `:return-value`
 and `:fetch-base-headers`. In its arity-2 version `defn-over-http` takes an
 additional map, which gets merged into the config map.
 
+Note that keys and values can also be passed varargs-style
+
+```clojure
+(defn-over-http list-public-resources :return-value [])
+```
+
 ## Error handling
 
 When an `:error-handler` is present, it must come in conjuction with a definition

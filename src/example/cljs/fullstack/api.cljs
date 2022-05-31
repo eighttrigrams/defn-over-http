@@ -10,4 +10,5 @@
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn-over-http list-public-resources)
 
-(defn-over-http list-resources {:return-value []})
+#_{:clj-kondo/ignore [:invalid-arity]}
+(defn-over-http list-resources :return-value [])

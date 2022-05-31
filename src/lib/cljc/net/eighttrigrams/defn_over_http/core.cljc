@@ -3,7 +3,7 @@
 (defmacro defn-over-http
   ([fname]
    `(defn-over-http ~fname ~(symbol 'config)))
-  ([fname config-param]
+  ([fname & {:as cfg}]
    (let [config        (gensym)
          args          (gensym)
          handle-error  (gensym)
@@ -22,7 +22,7 @@
         (defn ~fname [& ~args]
           (js/Promise.
            (fn [~resolve ~reject]
-             (let [~config       (merge ~(symbol 'config) ~config-param)
+             (let [~config       (merge ~(symbol 'config) ~cfg)
                    ~reader       (cognitect.transit/reader :json) ;; TODO close?
                    ~writer       (cognitect.transit/writer :json)
                    ~handle-error (fn [~e-type ~e]
