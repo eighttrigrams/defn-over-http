@@ -21,7 +21,7 @@ exists and should be wired up? It then could approximate something like a regula
 
 ## Walkthrough
 
-Note that an [example application](./README.md#example-application) is part of this repository. 
+Note that an [example application](#example-application) is part of this repository. 
 
 Let `list-public-resources` be our function on the backend:
 
@@ -88,16 +88,10 @@ additional map, which gets merged into the config map.
 
 ## Error handling
 
-When a `:error-handler` is present, it must come in conjuction with a definition
-for `:return-handler`. This is because in this case no error will be thrown at the call site. So the consumer of the succesful promise there should get an empty result matching the type of the values the our original function returns.
+When an `:error-handler` is present, it must come in conjuction with a definition
+for `:return-handler`. This is because in this case no error will be thrown at the call site. So the consumer of the succesful promise there should get an empty result matching the type of the values that our original function returns.
 
-If however, no error handler is defined at the declaration site,
-
-```clojure
-(defn-over-http list-public-resources)
-```
-
-errors must be caught at the call site.
+If however, no error handler is defined at the declaration site, errors must be caught at the call site.
 
 ```clojure
 (go (try (-> (api/list-public-resources "") <p! prn))
