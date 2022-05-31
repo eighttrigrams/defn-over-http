@@ -1,4 +1,4 @@
-(defproject fullstack "0.1.11"
+(defproject defn-over-http "0.1.15"
   :description "Allows for Clojure backend functions to be called by ClojureScript frontend code"
   :url "https://github.com/eighttrigrams/defn-over-http"
   :license {:name "Eclipse Public License"
@@ -6,15 +6,16 @@
 
   :min-lein-version "2.7.1"
 
-  :dependencies [[org.clojure/clojure "1.10.0"]
-                 [org.clojure/clojurescript "1.10.773"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [org.clojure/clojurescript "1.11.54"]
                  [compojure/compojure "1.6.2"]
                  [ring/ring-json "0.5.1"]
-                 [reagent "0.10.0" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
+                 [reagent "1.1.1" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
                  [cljs-ajax "0.8.3"]
                  [org.clojure/core.async "1.5.648"]
                  [clj-http "3.12.1"]
-                 [ring/ring-jetty-adapter "1.8.2"]
+                 [com.fasterxml.jackson.core/jackson-core "2.13.3"]
+                 [ring/ring-jetty-adapter "1.9.5"]
                  [derekchiang/ring-proxy "1.0.1"]
                  [com.cognitect/transit-clj "1.0.329"]
                  [com.cognitect/transit-cljs "0.8.269"]]
@@ -31,7 +32,7 @@
             "fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
             "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]}
 
-  :profiles {:dev {:dependencies   [[com.bhauman/figwheel-main "0.2.12"]
+  :profiles {:dev {:dependencies   [[com.bhauman/figwheel-main "0.2.18"]
                                     [com.bhauman/rebel-readline-cljs "0.1.4"]]
                    
                    :resource-paths ["target"]

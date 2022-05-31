@@ -21,12 +21,11 @@
   },
   "homepage": "https://github.com/danielmarreirosdeoliveira/fullstack-clj#readme",
   "devDependencies": {
-    "webpack": "^5.30.0",
-    "webpack-cli": "^4.6.0"
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "tsfun": "5.5.7"
+    "react-dom": "^17.0.2"
   }
 }
