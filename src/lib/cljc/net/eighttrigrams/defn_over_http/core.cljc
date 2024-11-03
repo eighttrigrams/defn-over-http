@@ -61,7 +61,7 @@
                                                        (~resolve (cognitect.transit/read ~reader ~return))))}]
                (ajax.core/POST (:api-path ~config) ~request)))))))))
 
-(defmacro ^:private -defdispatch [fname pass-server-args & names]
+(defmacro defdispatch [fname {:keys [pass-server-args? error-handler]} & names]
   (let [function    (gensym)
         args        (gensym)
         server-args (gensym)
@@ -85,7 +85,7 @@
                              [(str name) `{:return (do
                                                      (cognitect.transit/write
                                                       ~writer
-                                                      (apply (if ~pass-server-args
+                                                      (apply (if ~pass-server-args?
                                                                (~name ~server-args)
                                                                ~name)
                                                              (cognitect.transit/read ~reader)))
@@ -94,13 +94,8 @@
                  {:return nil
                   :thrown (str "Unknown function: '" ~function "'")})
                (catch Exception ~e
+                 (when ~error-handler (~error-handler ~e))
                  {:return nil
                   :thrown (.toString ~e)})
                (finally (.close ~os)
                         (.close ~is))))))))
-
-(defmacro defdispatch [fname & args]
-  (apply (partial #'-defdispatch &form &env fname false) args))
-
-(defmacro defdispatch-with-args [fname & args]
-  (apply (partial #'-defdispatch &form &env fname true) args))

@@ -1,7 +1,9 @@
 (ns fullstack.dispatch
-  (:require [net.eighttrigrams.defn-over-http.core :refer [defdispatch defdispatch-with-args]]
-            [fullstack.resources :refer [list-public-resources list-resources]]))
+  (:require [net.eighttrigrams.defn-over-http.core :refer [defdispatch]]
+            [fullstack.resources :refer [#_list-public-resources list-resources]]))
 
-(defdispatch handler list-public-resources)
+(defn handle-error [e]
+  (.printStackTrace e))
 
-(defdispatch-with-args handler list-resources)
+(defdispatch handler {:error-handler handle-error
+                      :pass-server-args? true} list-resources)
